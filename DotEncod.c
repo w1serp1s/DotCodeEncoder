@@ -30,6 +30,7 @@
 // Rev 2.23 -- Removed conditions for calling RowPenalty() and ColPenalty in ScoreArray(). Also
 //                  changed some integral variable and function return types to long if they may not fit
 //                  in a 16-bit integer (4/5/2019)
+// Rev 2.24 -- Return same undifferentiated score for code with any unlit edge (4/29/2019)
 
 // DotCodeEncode() normally works on an input character string with the
 //  following substitutions:
@@ -57,6 +58,8 @@
 
 #define GF 113      /* Size of the Galois field */
 #define PM 3        /* Prime Modulus for the Galois field */
+
+#define SCORE_UNLIT_EDGE    -99999
 
 /*****  GLOBAL VARIABLES    *****/
 int wd[5000];           /* array of Codewords (data plus checks) in order */
@@ -797,7 +800,7 @@ long ScoreArray (unsigned char *Dots, int Hgt, int Wid)
             last = x;
             sum++;
         }
-    if (sum == 0) penalty += 100000L;   // guard against empty edge
+    if (sum == 0) return SCORE_UNLIT_EDGE;      // guard against empty top edge
     worstedge = sum + last-first;
     worstedge *= Hgt;
 
@@ -808,7 +811,7 @@ long ScoreArray (unsigned char *Dots, int Hgt, int Wid)
             last = x;
             sum++;
         }
-    if (sum == 0) penalty += 200000L;   // guard against empty edge
+    if (sum == 0) return SCORE_UNLIT_EDGE;      // guard against empty bottom edge
     sum += last-first;
     sum *= Hgt;
     if (sum < worstedge) worstedge = sum;
@@ -820,7 +823,7 @@ long ScoreArray (unsigned char *Dots, int Hgt, int Wid)
             last = y;
             sum++;
         }
-    if (sum == 0) penalty += 400000L;   // guard against empty edge
+    if (sum == 0) return SCORE_UNLIT_EDGE;      // guard against empty left edge
     sum += last-first;
     sum *= Wid;
     if (sum < worstedge) worstedge = sum;
@@ -832,7 +835,7 @@ long ScoreArray (unsigned char *Dots, int Hgt, int Wid)
             last = y;
             sum++;
         }
-    if (sum == 0) penalty += 800000L;   // guard against empty edge
+    if (sum == 0) return SCORE_UNLIT_EDGE;      // guard against empty right edge
     sum += last-first;
     sum *= Wid;
     if (sum < worstedge) worstedge = sum;
