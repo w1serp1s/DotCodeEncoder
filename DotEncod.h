@@ -2,6 +2,10 @@
 /**	 "DotEncod.h" -- DotCode Encoding Module headers 10/21/08  (AL)	  **/
 /* ======================================================================= */
 
+#if defined(__cplusplus)
+extern "C" {
+#endif
+
 /*-------------------------------------------------------------------------*/
 /**************   PRIMARY DATA & PARAMETER INPUT STRUCTURE   ***************/
 /*-------------------------------------------------------------------------*/
@@ -33,7 +37,7 @@ typedef struct {
 /*-------------------------------------------------------------------------*/
 /*****************   PROTOTYPE OF THE ENCODING FUNCTION    *****************/
 /*-------------------------------------------------------------------------*/
-int DotCodeEncode (inputs *in, output *out, int literal, int topmsk, int fill, int show);
+int DotCodeEncode (inputs *in, output *out, int literal, int topmsk, int fill, int show, int fast);
 // Notes:
 //		"literal" is nornally 0, but when non-zero causes the input message to
 //					be encoded literally, not interpreting "#x" sequences & thus
@@ -43,6 +47,7 @@ int DotCodeEncode (inputs *in, output *out, int literal, int topmsk, int fill, i
 //		"fill" determines if the symbol shall be filled or just "sized"
 //		"show" determines if symbol encoding details shall be output
 //					(generally for dignostic purposes only)
+//      "fast" allows short-circuiting if score is high enough
 //		DotCodeEncode() returns the size of the symbol bitmap in chars
 
 /*-------------------------------------------------------------------------*/
@@ -56,3 +61,7 @@ int DotCodeEncode (inputs *in, output *out, int literal, int topmsk, int fill, i
 #define BMAP (out->bitmap)
 #define NROW (out->rows)
 #define NCOL (out->cols)
+
+#if defined(__cplusplus)
+}
+#endif
